@@ -1,0 +1,39 @@
+function calculateFullTimeSalary() {
+    // Felder aus dem Formular abrufen
+    var Stunden_WocheField = this.getField("Stunden_Woche");
+    var BasisGehaltPMField = this.getField("BasisGehaltPM");
+    var kalk_VZ_GehaltField = this.getField("kalk_VZ_Gehalt");
+
+    // Überprüfen, ob die Felder existieren
+    if (!Stunden_WocheField || !BasisGehaltPMField || !kalk_VZ_GehaltField) {
+        app.alert("Ein oder mehrere Felder fehlen im Formular: 'Stunden_Woche', 'BasisGehaltPM' oder 'kalk_VZ_Gehalt'.");
+        return; // Beendet die Funktion, wenn Felder fehlen
+    }
+
+    // Werte abrufen und sicherstellen, dass sie Strings sind
+    var inputStunden_Woche = String(Stunden_WocheField.value);
+    inputStunden_Woche = inputStunden_Woche.replace(/\./g, ""); // Entfernt alle Tausenderpunkte
+    inputStunden_Woche = inputStunden_Woche.replace(",", "."); // Ersetzt das Dezimalkomma durch einen Dezimalpunkt
+    var workedHours = parseFloat(inputStunden_Woche) || 0; // Umwandlung in Zahl, Standardwert 0 bei ungültiger Eingabe
+
+    var inputactualSalary = String(BasisGehaltPMField.value);
+    inputactualSalary = inputactualSalary.replace(/\./g, ""); // Entfernt alle Tausenderpunkte
+    inputactualSalary = inputactualSalary.replace(",", "."); // Komma durch Punkt ersetzen
+    var actualSalary = parseFloat(inputactualSalary) || 0; // Standardwert 0 bei ungültiger Eingabe
+
+    // Überprüfen, ob die Stunden gültig sind (nicht 0 oder negativ)
+    if (workedHours > 0) {
+        // Feste Vollzeitstunden
+        var fullTimeHours = 40;
+
+        // Vollzeitgehalt berechnen
+        var result = (actualSalary * fullTimeHours) / workedHours;
+
+        // Ergebnis im Feld "kalk_VZ_Gehalt" anzeigen
+        kalk_VZ_GehaltField.value = result.toFixed(2); // 2 Dezimalstellen
+    } else {
+        // Ungültige Eingabe, Ergebnisfeld leeren und Warnung anzeigen
+        kalk_VZ_GehaltField.value = "";
+        app.alert("Bitte geben Sie eine gültige Anzahl geleisteter Stunden ein (größer als 0).");
+    }
+}
